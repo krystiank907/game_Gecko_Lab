@@ -13,52 +13,57 @@ import GameplayKit
 
 class Menu: SKScene {
     
-
-
-    
     override func didMove(to view: SKView) {
-
+        //add background to Scene
         let background = SKSpriteNode(imageNamed: "b1")
         self.addChild(background)
-        background.size = CGSize(width: 750, height: 1334)
+        background.size = CGSize(width: 750, height: 1334)//set width and height background and possiton x,y,z
         background.position=CGPoint(x: self.frame.midX, y: self.frame.midY)
-
+        background.zPosition = 0
         
         
+        //add helloLabel to Scene
         let helloLabel = SKLabelNode(fontNamed: "Helvetica Neue Light Italic")
         self.addChild(helloLabel)
-        helloLabel.text = "Hello in Monkey Game"
+        helloLabel.text = "Hello in Monkey Game"          //set text, font, possiton x,y,z
         helloLabel.fontSize = 69
         helloLabel.position = CGPoint(x: 0, y: 400)
         helloLabel.alpha = 0.0
-        helloLabel.run(SKAction.fadeIn(withDuration: 4.0))
-
+        helloLabel.run(SKAction.fadeIn(withDuration: 4.0)) //run animation
+        helloLabel.zPosition = 0.01
+        
         
         let startLabel = SKLabelNode(fontNamed: "Helvetica Neue Light Italic")
         self.addChild(startLabel)
         startLabel.text = "Press start to play"
         startLabel.fontSize = 59
-        startLabel.position = CGPoint(x: 0, y: 250)
+        startLabel.position = CGPoint(x: 0, y: 210)
         startLabel.alpha = 0.0
         startLabel.run(SKAction.fadeIn(withDuration: 4.0))
-
-        let actionBanana = SKAction.rotate(byAngle: 90, duration: 20.0)
+        startLabel.zPosition = 0.01
+        startLabel.run(pulse())
+        
+        let actionBanana = SKAction.rotate(byAngle: 90, duration: 20.0) // animation rotate
         let banana = SKSpriteNode(imageNamed: "banana")
         self.addChild(banana)
         banana.position = CGPoint(x: -262.5, y: -504.5)
-        banana.run(SKAction.repeatForever(actionBanana))
-
+        banana.zPosition = 0.01
+        banana.run(SKAction.repeatForever(actionBanana)) //repeat forever animation in actionBanana (rotate)
+        
         
         let banana2 = SKSpriteNode(imageNamed: "banana")
         self.addChild(banana2)
         banana2.position = CGPoint(x: 254.5, y: -504.5)
         banana2.run(SKAction.repeatForever(actionBanana))
+        banana2.zPosition = 0.01
         
         
         let monkey = SKSpriteNode(imageNamed: "left_1")
         self.addChild(monkey)
         monkey.position = CGPoint(x: self.frame.midX, y: -504.5)
+        monkey.zPosition = 0.01
         
+        //this animation changed image
         let actionMonkey = SKAction.repeatForever(
             SKAction.animate(with: [
                 
@@ -68,37 +73,17 @@ class Menu: SKScene {
                 ], timePerFrame: 0.1)
         )
         
-        
+        //run animation
         monkey.run(actionMonkey)
-
         
         
-    
-
-        
-        // Get label node from scene and store it for use later
-//        self.helloLabel = self.childNode(withName: "//helloLabel") as? SKLabelNode
-//        if let helloLabel = self.helloLabel {
-//            helloLabel.alpha = 0.0
-//            helloLabel.run(SKAction.fadeIn(withDuration: 4.0))
-//            
-//        }
-//        self.startLabel = self.childNode(withName: "//startLabel") as? SKLabelNode
-//        if let startLabel = self.startLabel {
-//            startLabel.alpha = 0.0
-//            startLabel.run(SKAction.fadeIn(withDuration: 5.0))
-//        }
-
-        // Create shape node to use during mouse interaction
-       
     }
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
+    func pulse()->SKAction{
+        let pulseUp = SKAction.scale(to: 1.5, duration: 0.5)
+        let pulseDown = SKAction.scale(to: 1.0, duration: 0.5)
+        let pulse = SKAction.sequence([pulseUp, pulseDown])
+        let repeatPulse = SKAction.repeatForever(pulse)
+        return repeatPulse
     }
-
     
-    
-
-    
-
 }
