@@ -17,6 +17,9 @@
 		975479CD1EBC9AFF000F41CE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 975479CB1EBC9AFF000F41CE /* LaunchScreen.storyboard */; };
 		975479D81EBC9AFF000F41CE /* game_Gecko_LabTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975479D71EBC9AFF000F41CE /* game_Gecko_LabTests.swift */; };
 		975479E31EBC9AFF000F41CE /* game_Gecko_LabUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975479E21EBC9AFF000F41CE /* game_Gecko_LabUITests.swift */; };
+		975479F51EBCAB25000F41CE /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975479F41EBCAB25000F41CE /* MenuViewController.swift */; };
+		975479F71EBDD95B000F41CE /* Menu.sks in Resources */ = {isa = PBXBuildFile; fileRef = 975479F61EBDD95B000F41CE /* Menu.sks */; };
+		97547A031EBDE6A6000F41CE /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97547A021EBDE6A6000F41CE /* Menu.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,9 @@
 		975479DE1EBC9AFF000F41CE /* game_Gecko_LabUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = game_Gecko_LabUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		975479E21EBC9AFF000F41CE /* game_Gecko_LabUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = game_Gecko_LabUITests.swift; sourceTree = "<group>"; };
 		975479E41EBC9AFF000F41CE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		975479F41EBCAB25000F41CE /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		975479F61EBDD95B000F41CE /* Menu.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Menu.sks; sourceTree = "<group>"; };
+		97547A021EBDE6A6000F41CE /* Menu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +109,7 @@
 		975479BB1EBC9AFF000F41CE /* game_Gecko_Lab */ = {
 			isa = PBXGroup;
 			children = (
+				97547A011EBDE546000F41CE /* Menu */,
 				975479BC1EBC9AFF000F41CE /* AppDelegate.swift */,
 				975479BE1EBC9AFF000F41CE /* GameScene.sks */,
 				975479C01EBC9AFF000F41CE /* Actions.sks */,
@@ -132,6 +139,16 @@
 				975479E41EBC9AFF000F41CE /* Info.plist */,
 			);
 			path = game_Gecko_LabUITests;
+			sourceTree = "<group>";
+		};
+		97547A011EBDE546000F41CE /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				975479F41EBCAB25000F41CE /* MenuViewController.swift */,
+				975479F61EBDD95B000F41CE /* Menu.sks */,
+				97547A021EBDE6A6000F41CE /* Menu.swift */,
+			);
+			name = Menu;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -246,6 +263,7 @@
 			files = (
 				975479C81EBC9AFF000F41CE /* Main.storyboard in Resources */,
 				975479BF1EBC9AFF000F41CE /* GameScene.sks in Resources */,
+				975479F71EBDD95B000F41CE /* Menu.sks in Resources */,
 				975479CA1EBC9AFF000F41CE /* Assets.xcassets in Resources */,
 				975479CD1EBC9AFF000F41CE /* LaunchScreen.storyboard in Resources */,
 				975479C11EBC9AFF000F41CE /* Actions.sks in Resources */,
@@ -276,6 +294,8 @@
 				975479C31EBC9AFF000F41CE /* GameScene.swift in Sources */,
 				975479C51EBC9AFF000F41CE /* GameViewController.swift in Sources */,
 				975479BD1EBC9AFF000F41CE /* AppDelegate.swift in Sources */,
+				975479F51EBCAB25000F41CE /* MenuViewController.swift in Sources */,
+				97547A031EBDE6A6000F41CE /* Menu.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,6 +546,7 @@
 				975479E91EBC9AFF000F41CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		975479EA1EBC9AFF000F41CE /* Build configuration list for PBXNativeTarget "game_Gecko_LabTests" */ = {
 			isa = XCConfigurationList;
@@ -534,6 +555,7 @@
 				975479EC1EBC9AFF000F41CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		975479ED1EBC9AFF000F41CE /* Build configuration list for PBXNativeTarget "game_Gecko_LabUITests" */ = {
 			isa = XCConfigurationList;
@@ -542,6 +564,7 @@
 				975479EF1EBC9AFF000F41CE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
