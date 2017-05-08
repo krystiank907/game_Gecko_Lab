@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		975479BD1EBC9AFF000F41CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975479BC1EBC9AFF000F41CE /* AppDelegate.swift */; };
 		975479BF1EBC9AFF000F41CE /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 975479BE1EBC9AFF000F41CE /* GameScene.sks */; };
-		975479C11EBC9AFF000F41CE /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 975479C01EBC9AFF000F41CE /* Actions.sks */; };
 		975479C31EBC9AFF000F41CE /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975479C21EBC9AFF000F41CE /* GameScene.swift */; };
 		975479C51EBC9AFF000F41CE /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975479C41EBC9AFF000F41CE /* GameViewController.swift */; };
 		975479C81EBC9AFF000F41CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 975479C61EBC9AFF000F41CE /* Main.storyboard */; };
@@ -43,7 +42,6 @@
 		975479B91EBC9AFF000F41CE /* game_Gecko_Lab.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = game_Gecko_Lab.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		975479BC1EBC9AFF000F41CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		975479BE1EBC9AFF000F41CE /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
-		975479C01EBC9AFF000F41CE /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		975479C21EBC9AFF000F41CE /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		975479C41EBC9AFF000F41CE /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		975479C71EBC9AFF000F41CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -109,12 +107,9 @@
 		975479BB1EBC9AFF000F41CE /* game_Gecko_Lab */ = {
 			isa = PBXGroup;
 			children = (
+				97A08C751EC0A1090029A7E2 /* Game */,
 				97547A011EBDE546000F41CE /* Menu */,
 				975479BC1EBC9AFF000F41CE /* AppDelegate.swift */,
-				975479BE1EBC9AFF000F41CE /* GameScene.sks */,
-				975479C01EBC9AFF000F41CE /* Actions.sks */,
-				975479C21EBC9AFF000F41CE /* GameScene.swift */,
-				975479C41EBC9AFF000F41CE /* GameViewController.swift */,
 				975479C61EBC9AFF000F41CE /* Main.storyboard */,
 				975479C91EBC9AFF000F41CE /* Assets.xcassets */,
 				975479CB1EBC9AFF000F41CE /* LaunchScreen.storyboard */,
@@ -149,6 +144,16 @@
 				97547A021EBDE6A6000F41CE /* Menu.swift */,
 			);
 			name = Menu;
+			sourceTree = "<group>";
+		};
+		97A08C751EC0A1090029A7E2 /* Game */ = {
+			isa = PBXGroup;
+			children = (
+				975479BE1EBC9AFF000F41CE /* GameScene.sks */,
+				975479C21EBC9AFF000F41CE /* GameScene.swift */,
+				975479C41EBC9AFF000F41CE /* GameViewController.swift */,
+			);
+			name = Game;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,7 +271,6 @@
 				975479F71EBDD95B000F41CE /* Menu.sks in Resources */,
 				975479CA1EBC9AFF000F41CE /* Assets.xcassets in Resources */,
 				975479CD1EBC9AFF000F41CE /* LaunchScreen.storyboard in Resources */,
-				975479C11EBC9AFF000F41CE /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
