@@ -11,78 +11,43 @@ import GameplayKit
 
 class GameScene: SKScene {
     
-    private var label : SKLabelNode?
-    private var spinnyNode : SKShapeNode?
+    var monkey:SKSpriteNode?
     
     override func didMove(to view: SKView) {
         
-
-        self.label = self.childNode(withName: "//helloLabel1") as? SKLabelNode
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 4.0))
-        }
+        let background = SKSpriteNode(imageNamed: "b1")
+        self.addChild(background)
+        background.size = CGSize(width: 750, height: 1334)//set width and height background and possiton x,y,z
+        background.position=CGPoint(x: self.frame.midX, y: self.frame.midY)
+        background.zPosition = 0
         
-        let w = (self.size.width + self.size.height) * 0.05
-        self.spinnyNode = SKShapeNode.init(rectOf: CGSize.init(width: w, height: w), cornerRadius: w * 0.3)
+        let floorImage = SKSpriteNode(imageNamed: "b4")
+        floorImage.size = CGSize(width: 750, height: 640)
+        floorImage.position=CGPoint(x: self.frame.midX, y: -346)
+        floorImage.zPosition = 0.001
+        self.addChild(floorImage)
         
-        if let spinnyNode = self.spinnyNode {
-            spinnyNode.lineWidth = 2.5
+        let floorPhysics = SKNode()
+        floorPhysics.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: self.frame.minX, y: -504), to: CGPoint(x: self.frame.maxX, y: -504))
+        self.addChild(floorPhysics)
+        
+        let leftMarginesPhysics = SKNode()
+        leftMarginesPhysics.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: self.frame.minX , y: self.frame.minY), to: CGPoint(x: self.frame.minX, y: self.frame.maxY))
+        self.addChild(leftMarginesPhysics)
+        
+        let rigtMarginesPhysics = SKNode ()
+        rigtMarginesPhysics.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: self.frame.maxX, y: self.frame.minY), to: CGPoint(x: self.frame.maxX, y: self.frame.maxY))
+        self.addChild(rigtMarginesPhysics)
             
-            spinnyNode.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
-            spinnyNode.run(SKAction.sequence([SKAction.wait(forDuration: 0.5),
-                                              SKAction.fadeOut(withDuration: 0.5),
-                                              SKAction.removeFromParent()]))
-        }
-    }
-    
-    
-    func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
-    }
-    
-    func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
         
-        for t in touches { self.touchDown(atPoint: t.location(in: self)) }
+        monkey = SKSpriteNode(imageNamed: "left_2")
+        monkey?.position = CGPoint(x: 305, y: -470)
+        monkey?.zPosition = 0.01
+        self.addChild((monkey)!)
+        monkey?.physicsBody = SKPhysicsBody(circleOfRadius: 30)
+        
+        self.physicsWorld.gravity = CGVector(dx: 0, dy: -5)
+        
     }
     
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
-    }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchUp(atPoint: t.location(in: self)) }
-    }
-    
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-    }
 }
