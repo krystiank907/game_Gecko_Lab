@@ -15,7 +15,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var step:SKSpriteNode?
     var left:SKSpriteNode?
     var right:SKSpriteNode?
-    var info=true
+    var info = true
     
     
     
@@ -65,14 +65,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(monkey!)
         monkey?.physicsBody = SKPhysicsBody(circleOfRadius: 30)
         
-        self.physicsWorld.gravity = CGVector(dx: 0, dy: -5)
+        self.physicsWorld.gravity = CGVector(dx: 0, dy: -10)
         
         monkey?.physicsBody?.categoryBitMask = 2
         
         monkey?.physicsBody?.contactTestBitMask = 1
         
         monkey?.physicsBody?.collisionBitMask = 1
-        
+        monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         //self.physicsWorld.contactDelegate = self
         
         
@@ -93,7 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     func didBegin(_ contact: SKPhysicsContact) {
-        self.physicsWorld.speed = 0.0
+        self.physicsWorld.speed = 0.1
         step?.removeAllActions()
     }
     
@@ -106,31 +106,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for touch in touches {
             let location = touch.location(in: self)
             let touchedNode = self.atPoint(location)
-            
             if touchedNode == monkey {
-                
+                monkey?.run(SKAction.moveBy(x: 0, y: 50, duration: 0.1))
                 monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                monkey?.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 80))
-                
-                let position = self.convert((step?.position)!, to: self)
-                let position2 = self.convert((monkey?.position)!, to: self)
-                if position2.y < position.y{
-                    step?.physicsBody?.categoryBitMask = 2
-                    step?.physicsBody?.contactTestBitMask = 1
-                    step?.physicsBody?.collisionBitMask = 1
-                }else{
-                    step?.physicsBody?.categoryBitMask = 1
-                    step?.physicsBody?.contactTestBitMask = 2
-                    step?.physicsBody?.collisionBitMask = 2
-                }
-                if touchedNode == left {
-                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                    monkey?.run(SKAction.group([actionMonkey(),wait(),move()]))
-                    
-                    
-                }
+                possitionStep()
+            }
+            if touchedNode == left {
+                monkey?.run(SKAction.group([actionMonkeyLeft(),wait(),moveLeft()]))
+                monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                possitionStep()
                 
             }
+            if touchedNode == right {
+                monkey?.run(SKAction.group([actionMonkeyRight(),wait(),moveRight()]))
+                monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                possitionStep()
+                
+            }
+            
             
         }
     }
@@ -141,15 +134,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let touchedNode = self.atPoint(location)
             if touchedNode == left {
                 if self.info == true{
+                    monkey?.run(SKAction.group([actionMonkeyLeft(),wait(),moveLeft()]))
                     monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                    monkey?.run(SKAction.group([actionMonkey(),wait(),move()]))
-                    print("aaaaaaaaa")
+                    possitionStep()
                     self.info = false
                 }else{
                     monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                    //monkey?.run(move())
-                    print("bbbbbbbbbbb")
+                    possitionStep()
                 }
+            }
+            if touchedNode == right {
+                if self.info == true{
+                    monkey?.run(SKAction.group([actionMonkeyRight(),wait(),moveRight()]))
+                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                    possitionStep()
+                    self.info = false
+                }else{
+                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                    possitionStep()
+                }
+            }
+            if touchedNode == monkey {
+                monkey?.run(SKAction.moveBy(x: 0, y: 50, duration: 0.1))
+                monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                possitionStep()
             }
             
         }
@@ -157,10 +165,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.info=true
-        //monkey?.removeAllActions()
+        monkey?.removeAllActions()
+        monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
         
     }
-    func actionMonkey()->SKAction{
+    
+    func actionMonkeyLeft()->SKAction{
         let action = SKAction.repeatForever(
             SKAction.animate(with: [
                 SKTexture(imageNamed: "left_2"),
@@ -169,14 +179,44 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 ], timePerFrame: 0.1))
         return action
     }
-    func move()->SKAction{
-        let moveNodeUp = SKAction.repeatForever(SKAction.moveBy(x: -10.0, y: 0.0, duration: 0))
-        // print("22222222")
+    
+    func actionMonkeyRight()->SKAction{
+        let action = SKAction.repeatForever(
+            SKAction.animate(with: [
+                SKTexture(imageNamed: "right_2"),
+                SKTexture(imageNamed: "right_1"),
+                
+                ], timePerFrame: 0.1))
+        return action
+    }
+    
+    func moveLeft()->SKAction{
+        let moveNodeUp = SKAction.repeatForever(SKAction.moveBy(x: -20.0, y: 0.0, duration: 0.1))
         return moveNodeUp
     }
+    
+    func moveRight()->SKAction{
+        let moveNodeUp = SKAction.repeatForever(SKAction.moveBy(x: 20.0, y: 0.0, duration: 0.1))
+        return moveNodeUp
+    }
+    
     func wait()->SKAction{
         let wait = SKAction.wait(forDuration: 0.1)
         return wait
+    }
+    func possitionStep(){
+        let position = self.convert((step?.position)!, to: self)
+        let position2 = self.convert((monkey?.position)!, to: self)
+        if position2.y < position.y{
+            step?.physicsBody?.categoryBitMask = 2
+            step?.physicsBody?.contactTestBitMask = 1
+            step?.physicsBody?.collisionBitMask = 1
+        }else{
+            step?.physicsBody?.categoryBitMask = 1
+            step?.physicsBody?.contactTestBitMask = 2
+            step?.physicsBody?.collisionBitMask = 2
+        }
+        
     }
     
     
