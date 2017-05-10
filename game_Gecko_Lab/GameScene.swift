@@ -109,10 +109,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func setupStep(){
-        let minX = self.frame.minX
+        let minX = self.frame.minX + 50
         let maxX = self.frame.maxX
-        let minY = self.frame.minY
-        let maxY = self.frame.maxY
+        let minY = self.frame.minY + 150
+        let maxY = self.frame.maxY - 150
         let resultX = CGFloat(arc4random_uniform(UInt32(maxX - minX + 1))) + minX
         let resultY = CGFloat(arc4random_uniform(UInt32(maxY - minY + 1))) + minY
         step = SKSpriteNode(imageNamed: "b5")
