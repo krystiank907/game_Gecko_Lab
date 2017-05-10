@@ -119,7 +119,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // add monkey
     func setupMonkey(){
         monkey = SKSpriteNode(imageNamed: "left_2")
-        monkey?.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        monkey?.position = CGPoint(x: self.frame.midX, y: -300)
         monkey?.zPosition = 0.01
         monkey?.physicsBody?.allowsRotation = false
         monkey?.physicsBody = SKPhysicsBody(circleOfRadius: 30)
@@ -314,27 +314,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.addChild(step)
             }
             if i==1 {
-                step.position = CGPoint(x: -275, y: 0)
+                step.position = CGPoint(x: -160, y: 0)
                 self.addChild(step)
             }
             if i==2 {
-                step.position = CGPoint(x: -275, y: 360)
+                step.position = CGPoint(x: -200, y: 360)
                 self.addChild(step)
             }
             if i==3 {
-                step.position = CGPoint(x: -275, y: 720)
+                step.position = CGPoint(x: -200, y: 720)
                 self.addChild(step)
             }
             if i==4 {
-                step.position = CGPoint(x: 275, y: -200)
+                step.position = CGPoint(x: 140, y: -200)
                 self.addChild(step)
             }
             if i==5 {
-                step.position = CGPoint(x: 275, y: 160)
+                step.position = CGPoint(x: 145, y: 160)
                 self.addChild(step)
             }
             if i==6 {
-                step.position = CGPoint(x: 275, y: 520)
+                step.position = CGPoint(x: 140, y: 520)
                 self.addChild(step)
             }
             if i==7 {
