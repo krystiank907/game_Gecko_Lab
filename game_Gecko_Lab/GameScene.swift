@@ -12,17 +12,21 @@ import GameplayKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var monkey:SKSpriteNode?
-    var step:SKSpriteNode?
+
     var left:SKSpriteNode?
     var right:SKSpriteNode?
     var floor:SKSpriteNode?
     var jump:SKSpriteNode?
-    var arrayStep :[SKSpriteNode] = [SKSpriteNode]()
+    
     var info = true
     var first = true
     var lose:SKLabelNode?
     var banana:SKSpriteNode?
     var win:SKLabelNode?
+    
+    private var itemController = Step();
+    private var bananaController = Banana();
+
 
     
     
@@ -71,54 +75,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //setup gravity of game world
         self.physicsWorld.gravity = CGVector(dx: 0, dy: -5)
         
-        //add loseLabel
-        lose = SKLabelNode(fontNamed: "Helvetica Neue Light Italic")
-        lose?.text = "Try again"
-        lose?.fontSize = 90
-        lose?.zPosition = 0.01
-        lose?.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
-        lose?.run(pulse())
-        self.addChild(lose!)
-        
-        //add winLabel
-        win = SKLabelNode(fontNamed: "Helvetica Neue Light Italic")
-        win?.text = "You win"
-        win?.fontSize = 90
-        win?.zPosition = 0.01
-        win?.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
-        win?.run(pulse())
-        self.addChild(win!)
         
         
         self.physicsWorld.contactDelegate = self
         
-        
-        copyStep()
+        addLabel()
         setupMonkey()
         setupFloor()
-        showStep()
-        runStep()
         
+        Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(GameScene.spawnItems), userInfo: nil, repeats: true);
+
+        Timer.scheduledTimer(timeInterval: TimeInterval(bananaController.randomBetweenNumbers(firstNum: 20, secondNum: 45)), target: self, selector: #selector(GameScene.spawnBanana), userInfo: nil, repeats: true);
     }
     
-    //add banana 
-    func setupBanana(){
-        banana = SKSpriteNode(imageNamed: "banana")
-        banana?.zPosition = 0.001
-        banana?.position = CGPoint(x: 275, y: 900)
-        banana?.anchorPoint = CGPoint(x: 0.5, y: 0.3)
-        banana?.physicsBody = SKPhysicsBody(circleOfRadius: 30)
-        banana?.physicsBody?.categoryBitMask = 3
-        banana?.physicsBody?.contactTestBitMask = 1
-        banana?.physicsBody?.collisionBitMask = 1
-        banana?.physicsBody?.isDynamic = false
-        self.addChild(banana!)
-        banana?.run(SKAction.moveBy(x: 0, y: -3500 , duration: 70))
-    }
     
     // add monkey
     func setupMonkey(){
         monkey = SKSpriteNode(imageNamed: "left_2")
+        monkey?.name = "Monkey"
         monkey?.position = CGPoint(x: self.frame.midX, y: -300)
         monkey?.zPosition = 0.01
         monkey?.physicsBody?.allowsRotation = false
@@ -143,18 +117,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         floor?.physicsBody?.categoryBitMask = 1
         floor?.physicsBody?.contactTestBitMask = 2
         floor?.physicsBody?.collisionBitMask = 2
-        floor?.run(SKAction.moveBy(x: 0, y: -400 , duration: 10.5))
+        floor?.run(SKAction.sequence([
+            SKAction.moveBy(x: 0, y: -150 , duration: 24),
+            SKAction.removeFromParent(),
+            ]))
         
     }
     
-    //move action for step
-    func sequenceStep()->SKAction{
-        let sequence = SKAction.sequence([
-            SKAction.moveBy(x: 0, y: -3500 , duration: 70),
-            SKAction.removeFromParent(),
-            ])
-        return sequence
-    }
     
     //single touch
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -182,12 +151,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if touchedNode == left {
                 if self.info == true{
                     monkey?.run(SKAction.group([actionMonkeyLeft(),wait(),moveLeft()]))
-                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: -30)
                     self.info = false
                     monkey?.isUserInteractionEnabled = true
                     right?.isUserInteractionEnabled = true
                 }else{
-                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: -30)
                     monkey?.isUserInteractionEnabled = true
                     right?.isUserInteractionEnabled = true
                 }
@@ -195,12 +164,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if touchedNode == right {
                 if self.info == true{
                     monkey?.run(SKAction.group([actionMonkeyRight(),wait(),moveRight()]))
-                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: -30)
                     self.info = false
                     left?.isUserInteractionEnabled = true
                     monkey?.isUserInteractionEnabled = true
                 }else{
-                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
+                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: -30)
                     left?.isUserInteractionEnabled = true
                     monkey?.isUserInteractionEnabled = true
                 }
@@ -276,98 +245,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //set default position
     func restart(){
-        banana?.removeFromParent()
         floor?.removeFromParent()
-        removeStep()
         monkey?.removeFromParent()
-        
-        showStep()
+        Timer.scheduledTimer(timeInterval: TimeInterval(0.1), target: self, selector: #selector(GameScene.removeItems), userInfo: nil, repeats: false);
         setupFloor()
         setupMonkey()
-        runStep()
     }
     
-    //init all steps
-    func copyStep(){
-        for _ in 0..<11{
-            step = SKSpriteNode(imageNamed: "b5")
-            step?.size = CGSize(width: 300, height: 60)
-            step?.anchorPoint = CGPoint(x: 0.5, y: 1.25)
-            step?.zPosition = 0.001
-            step?.physicsBody = SKPhysicsBody(texture: step!.texture!, size: step!.size)
-            step?.physicsBody?.isDynamic = false
-            step?.physicsBody?.categoryBitMask = 1
-            step?.physicsBody?.contactTestBitMask = 2
-            step?.physicsBody?.collisionBitMask = 2
-            arrayStep.append(step!)
-        }
-        
-    }
-    
-    // show all steps
-    func showStep(){
-        var i = 0
-        for step in arrayStep {
-            
-            if i==0 {
-                step.position = CGPoint(x: -275, y: -360)
-                self.addChild(step)
-            }
-            if i==1 {
-                step.position = CGPoint(x: -160, y: 0)
-                self.addChild(step)
-            }
-            if i==2 {
-                step.position = CGPoint(x: -200, y: 360)
-                self.addChild(step)
-            }
-            if i==3 {
-                step.position = CGPoint(x: -200, y: 720)
-                self.addChild(step)
-            }
-            if i==4 {
-                step.position = CGPoint(x: 140, y: -200)
-                self.addChild(step)
-            }
-            if i==5 {
-                step.position = CGPoint(x: 145, y: 160)
-                self.addChild(step)
-            }
-            if i==6 {
-                step.position = CGPoint(x: 140, y: 520)
-                self.addChild(step)
-            }
-            if i==7 {
-                step.position = CGPoint(x: 275, y: 880)
-                setupBanana()
-                self.addChild(step)
-            }
 
-            i += 1
-        }
-    }
-    
-    // setup animation for steps
-    func runStep(){
-        
-        for step in arrayStep{
-            step.run(sequenceStep())
-        }
-    }
-    // remove all steps
-    func removeStep(){
-        for step in arrayStep {
-            step.removeFromParent()
-            step.removeAllActions()
+
+    // remove all items
+    func removeItems() {
+        for child in children {
+            if child.name == "Step" || child.name == "Banana"{
+                    child.removeFromParent();
+            }
         }
     }
     
     //do if contact banana with monkey
     func didBegin(_ contact: SKPhysicsContact) {
-        let collision = (contact.bodyA.contactTestBitMask | contact.bodyB.categoryBitMask)
-        if collision == ((monkey?.physicsBody?.contactTestBitMask)! | (banana?.physicsBody?.categoryBitMask)!) {
+        var firstBody = SKPhysicsBody();
+        var secondBody = SKPhysicsBody();
+        
+        if contact.bodyA.node?.name == "Monkey" {
+            firstBody = contact.bodyA;
+            secondBody = contact.bodyB;
+        } else {
+            firstBody = contact.bodyB;
+            secondBody = contact.bodyA;
+        }
+        if firstBody.node?.name == "Monkey" && secondBody.node?.name == "Banana" {
             restart()
-            win?.run(SKAction.sequence([SKAction.fadeIn(withDuration: 0.01),wait(),SKAction.fadeOut(withDuration: 2.0),]))
+            win?.alpha = 1
+            win?.run(SKAction.fadeOut(withDuration: 1.0))
         }
     }
     
@@ -376,20 +287,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
         let position = self.convert((monkey?.position)!, to: self)
         monkey?.physicsBody?.allowsRotation = false
-        if position.y > -730 && first == false{
-            lose?.run(SKAction.fadeOut(withDuration: 1.0))
-        }
-        if position.y > -730 && first == true{
-            lose?.run(SKAction.fadeOut(withDuration: 0.01))
-            win?.run(SKAction.fadeOut(withDuration: 0.01))
-            first = false
-        }
-        if position.y < -735{
-            lose?.run(SKAction.fadeIn(withDuration: 0.01))
+        if position.y < -730{
             restart()
+            lose?.alpha = 1
+            lose?.run(SKAction.fadeOut(withDuration: 1.0))
             
         }
     }
+    func spawnItems() {
+        self.scene?.addChild(itemController.spawnItems());
+    }
+    func spawnBanana() {
+        self.scene?.addChild(bananaController.spawnBanana());
+    }
     
+    func addLabel(){
+        //add loseLabel
+        lose = SKLabelNode(fontNamed: "Helvetica Neue Light Italic")
+        lose?.text = "Try again"
+        lose?.fontSize = 90
+        lose?.zPosition = 0.01
+        lose?.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        lose?.alpha = 0
+        lose?.run(pulse())
+        self.addChild(lose!)
+        
+        //add winLabel
+        win = SKLabelNode(fontNamed: "Helvetica Neue Light Italic")
+        win?.text = "You win"
+        win?.fontSize = 90
+        win?.zPosition = 0.01
+        win?.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        win?.run(pulse())
+        win?.alpha = 0
+        self.addChild(win!)
+
+    }
     
 }
