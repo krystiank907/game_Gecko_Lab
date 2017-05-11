@@ -76,15 +76,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.gravity = CGVector(dx: 0, dy: -5)
         
         
-        
         self.physicsWorld.contactDelegate = self
         
         addLabel()
         setupMonkey()
         setupFloor()
         
+        //show steps
         Timer.scheduledTimer(timeInterval: 4, target: self, selector: #selector(GameScene.spawnItems), userInfo: nil, repeats: true);
-
+        
+        //show banana
         Timer.scheduledTimer(timeInterval: TimeInterval(bananaController.randomBetweenNumbers(firstNum: 20, secondNum: 45)), target: self, selector: #selector(GameScene.spawnBanana), userInfo: nil, repeats: true);
     }
     
@@ -294,9 +295,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
     }
+    
+    //add steps
     func spawnItems() {
         self.scene?.addChild(itemController.spawnItems());
     }
+    //add banana
     func spawnBanana() {
         self.scene?.addChild(bananaController.spawnBanana());
     }
