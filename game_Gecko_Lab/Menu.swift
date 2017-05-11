@@ -21,6 +21,12 @@ class Menu: SKScene {
         background.position=CGPoint(x: self.frame.midX, y: self.frame.midY)
         background.zPosition = 0
         
+        let start = SKSpriteNode(imageNamed: "Start")
+        start.name = "Start"
+        start.position=CGPoint(x: self.frame.midX, y: self.frame.midY)
+        start.zPosition = 0.01
+        self.addChild(start)
+        
         
         //add helloLabel to Scene
         let helloLabel = SKLabelNode(fontNamed: "Helvetica Neue Light Italic")
@@ -84,6 +90,25 @@ class Menu: SKScene {
         let pulse = SKAction.sequence([pulseUp, pulseDown])
         let repeatPulse = SKAction.repeatForever(pulse)
         return repeatPulse
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
+        for touch in touches {
+            let location = touch.location(in: self);
+            
+            if atPoint(location).name == "Start" {
+                if let scene = GameScene(fileNamed: "GameScene") {
+                    // Set the scale mode to scale to fit the window
+                    scene.scaleMode = .aspectFill
+                    
+                    // Present the scene
+                    view!.presentScene(scene, transition: SKTransition.doorsOpenVertical(withDuration: 2));
+                }
+            }
+            
+        }
+        
     }
     
 }
