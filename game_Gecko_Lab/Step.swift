@@ -20,7 +20,7 @@ class Step {
     func spawnItems() -> SKSpriteNode {
         
 
-        let item: SKSpriteNode?;
+        let item: SKSpriteNode?
         
         item = SKSpriteNode(imageNamed: "b5")
         item!.name = "Step"
