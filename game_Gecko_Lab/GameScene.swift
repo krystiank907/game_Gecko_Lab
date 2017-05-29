@@ -8,29 +8,35 @@
 
 import SpriteKit
 import GameplayKit
+import CoreMotion
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var monkey:SKSpriteNode?
 
-    var left:SKSpriteNode?
-    var right:SKSpriteNode?
     var floor:SKSpriteNode?
     var jump:SKSpriteNode?
     
-    var info = true
-    var first = true
     var lose:SKLabelNode?
     var banana:SKSpriteNode?
     var win:SKLabelNode?
     
     private var itemController = Step();
     private var bananaController = Banana();
-
+    
+    var info = true
+    
+    var num = 1
+    var i = 0
+    
+    var motionManager: CMMotionManager!
 
     
     
     override func didMove(to view: SKView) {
+        
+        motionManager = CMMotionManager()
+        motionManager.startAccelerometerUpdates()
         
         //add background
         let background = SKSpriteNode(imageNamed: "b1")
@@ -39,37 +45,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.position=CGPoint(x: self.frame.midX, y: self.frame.midY)
         background.zPosition = 0
         
-        //add button move to left
-        left = SKSpriteNode()
-        left?.size = CGSize(width: 350, height: 300)
-        left?.anchorPoint = CGPoint(x: 0, y: 0)
-        left?.zPosition = 0.01
-        left?.position = CGPoint(x: self.frame.minX, y: self.frame.minY)
-        self.addChild(left!)
         
         //add button jump
         jump = SKSpriteNode()
         jump?.size = CGSize(width: 750, height: 1334)
-        jump?.zPosition = 0.001
+        jump?.zPosition = 0.01
         jump?.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         self.addChild(jump!)
         
-        //button move to right
-        right = SKSpriteNode()
-        right?.size = CGSize(width: 350, height: 300)
-        right?.anchorPoint = CGPoint(x: 1, y: 0)
-        right?.zPosition = 0.01
-        right?.position = CGPoint(x: self.frame.maxX, y: self.frame.minY)
-        self.addChild(right!)
         
         //add left Physics margines of scene
         let leftMarginesPhysics = SKNode()
-        leftMarginesPhysics.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: self.frame.minX , y: self.frame.minY), to: CGPoint(x: self.frame.minX, y: self.frame.maxY))
+        leftMarginesPhysics.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: self.frame.minX+1 , y: self.frame.minY+1), to: CGPoint(x: self.frame.minX+1, y: self.frame.maxY+1))
         self.addChild(leftMarginesPhysics)
         
         //add right Physics margines of scene
         let rigtMarginesPhysics = SKNode ()
-        rigtMarginesPhysics.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: self.frame.maxX, y: self.frame.minY), to: CGPoint(x: self.frame.maxX, y: self.frame.maxY))
+        rigtMarginesPhysics.physicsBody = SKPhysicsBody(edgeFrom: CGPoint(x: self.frame.maxX+1, y: self.frame.minY+1), to: CGPoint(x: self.frame.maxX+1, y: self.frame.maxY+1))
         self.addChild(rigtMarginesPhysics)
         
         //setup gravity of game world
@@ -87,6 +79,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //show banana
         Timer.scheduledTimer(timeInterval: TimeInterval(bananaController.randomBetweenNumbers(firstNum: 20, secondNum: 45)), target: self, selector: #selector(GameScene.spawnBanana), userInfo: nil, repeats: true);
+        
+        //run random num for image monkey
+        Timer.scheduledTimer(timeInterval: 0.04, target: self, selector: #selector(getrandomNumber), userInfo: nil, repeats: true)
     }
     
     
@@ -94,7 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupMonkey(){
         monkey = SKSpriteNode(imageNamed: "left_2")
         monkey?.name = "Monkey"
-        monkey?.position = CGPoint(x: self.frame.midX, y: -300)
+        monkey?.position = CGPoint(x: self.frame.midX, y: -250)
         monkey?.zPosition = 0.01
         monkey?.physicsBody?.allowsRotation = false
         monkey?.physicsBody = SKPhysicsBody(circleOfRadius: 30)
@@ -108,6 +103,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // add first floor
     func setupFloor(){
         floor = SKSpriteNode(imageNamed: "b5")
+        floor?.name = "Floor"
         floor?.size = CGSize(width: 750, height: 350)
         floor?.anchorPoint = CGPoint(x: 0.5, y: 0.60)
         floor?.position=CGPoint(x: self.frame.midX, y: self.frame.minY)
@@ -131,109 +127,60 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for touch in touches {
             let location = touch.location(in: self)
             let touchedNode = self.atPoint(location)
+            if(info==true || i<2){
             if touchedNode == jump || touchedNode == monkey{
-
-                monkey?.run(SKAction.moveBy(x: 0, y: 150, duration: 0.1))
+                monkey?.run(SKAction.moveBy(x: 0, y: 450, duration: 0.15))
                 monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: 0)
-                left?.isUserInteractionEnabled = true
-                right?.isUserInteractionEnabled = true
-           }
-            
+                info = false
+                i+=1
+            }
+        }
             
         }
     }
     
-    //hold touch
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-        for touch in touches {
-            let location = touch.location(in: self)
-            let touchedNode = self.atPoint(location)
-            if touchedNode == left {
-                if self.info == true{
-                    monkey?.run(SKAction.group([actionMonkeyLeft(),wait(),moveLeft()]))
-                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: -30)
-                    self.info = false
-                    monkey?.isUserInteractionEnabled = true
-                    right?.isUserInteractionEnabled = true
-                }else{
-                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: -30)
-                    monkey?.isUserInteractionEnabled = true
-                    right?.isUserInteractionEnabled = true
-                }
-            }
-            if touchedNode == right {
-                if self.info == true{
-                    monkey?.run(SKAction.group([actionMonkeyRight(),wait(),moveRight()]))
-                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: -30)
-                    self.info = false
-                    left?.isUserInteractionEnabled = true
-                    monkey?.isUserInteractionEnabled = true
-                }else{
-                    monkey?.physicsBody?.velocity = CGVector(dx: 0, dy: -30)
-                    left?.isUserInteractionEnabled = true
-                    monkey?.isUserInteractionEnabled = true
-                }
-            }
-            
-        }
-        
-    }
+
     
     //finish touches
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.info=true
+
         monkey?.removeAllActions()
-        turnOnInteraction()
     }
     
     //animation for left move monkey
     func actionMonkeyLeft()->SKAction{
-        let action = SKAction.repeatForever(
+        let action =
             SKAction.animate(with: [
-                SKTexture(imageNamed: "left_2"),
-                SKTexture(imageNamed: "left_1"),
-                
-                ], timePerFrame: 0.1))
+                SKTexture(imageNamed: "left_\(num)"),
+
+                ], timePerFrame: 10)
         return action
     }
     
+    
     //animation for right move monkey
     func actionMonkeyRight()->SKAction{
-        let action = SKAction.repeatForever(
+        let action =
             SKAction.animate(with: [
-                SKTexture(imageNamed: "right_2"),
-                SKTexture(imageNamed: "right_1"),
-                
-                ], timePerFrame: 0.1))
+                SKTexture(imageNamed: "right_\(num)"),
+
+                ], timePerFrame: 10)
         return action
     }
     
     //move monkey left
     func moveLeft()->SKAction{
-        let moveNodeUp = SKAction.repeatForever(SKAction.moveBy(x: -40.0, y: -10.0, duration: 0.1))
+        let moveNodeUp = SKAction.moveBy(x: -8.0, y: -10.0, duration: 0.3)
         return moveNodeUp
     }
     
     //move monkey right
     func moveRight()->SKAction{
-        let moveNodeUp = SKAction.repeatForever(SKAction.moveBy(x: 40.0, y: -10.0, duration: 0.1))
+        let moveNodeUp = SKAction.moveBy(x: 8.0, y: -10.0, duration: 0.3)
         return moveNodeUp
     }
     
-    //wait
-    func wait()->SKAction{
-        let wait = SKAction.wait(forDuration: 0.1)
-        return wait
-    }
-    
-    //turn on interaction for monkey and button
-    func turnOnInteraction(){
-        monkey?.isUserInteractionEnabled = false
-        right?.isUserInteractionEnabled = false
-        left?.isUserInteractionEnabled = false
-        
-    }
+
     
     //pulse animation for LoseLabel
     func pulse()->SKAction{
@@ -281,6 +228,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             win?.alpha = 1
             win?.run(SKAction.fadeOut(withDuration: 1.0))
         }
+        if firstBody.node?.name == "Monkey" && secondBody.node?.name == "Step" {
+            info = true
+            i = 0
+        }
+        if firstBody.node?.name == "Monkey" && secondBody.node?.name == "Floor" {
+            info = true
+            i = 0
+        }
     }
     
     
@@ -292,8 +247,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             restart()
             lose?.alpha = 1
             lose?.run(SKAction.fadeOut(withDuration: 1.0))
-            
         }
+        _ = motionManager.accelerometerData
+        if let accelerometerData = motionManager.accelerometerData {
+            if accelerometerData.acceleration.x < -0.2 {
+                    monkey?.run(SKAction.group([actionMonkeyLeft(),moveLeft()]))
+            }
+            if accelerometerData.acceleration.x > 0.2 {
+                    monkey?.run(SKAction.group([actionMonkeyRight(),moveRight()]))
+            }
+        }
+
     }
     
     //add steps
@@ -327,5 +291,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(win!)
 
     }
+    func getrandomNumber(){
+        
+        num = Int(arc4random_uniform(2) + 1)
+
+    }
+    
     
 }
